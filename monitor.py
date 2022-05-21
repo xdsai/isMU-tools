@@ -32,6 +32,7 @@ def login(session):
         logging.info("Login successful")
     else:
         logging.error("Login failed, invalid credentials")
+        exit(1)
     return session
 
 def get_block(session):

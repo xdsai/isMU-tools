@@ -35,19 +35,19 @@ def login(session):
         exit(1)
     return session
 
-def get_block(session):
+def get_notes(session):
     init = session.get(block_link, timeout = 10)
     soup = BeautifulSoup(init.text,'html.parser')
-    last_change = soup.find('a',{'id':'odkaz_na_posledni_akci'}).text
+    last_change = soup.find('a',{'id':'odkaz_na_posledni_akci'})
     return last_change, session
 
-def monitor_block(session):
-    last_change, session = get_block(session)
+def monitor_notebook(session):
+    last_change, session = get_notes(session)
     logging.info("Started monitoring...")
     while True:
         try:
-            new_change, session = get_block(session)
-            if new_change != last_change:
+            new_change, session = get_notes(session)
+            if new_change.text != last_change.text:
                 change_req = session.get(block_link + new_change['href'])
                 soup = BeautifulSoup(change_req.text,'html.parser')
                 row = soup.find('div',{'id':str(re.sub('#','', new_change['href']))})
@@ -71,4 +71,4 @@ def monitor_block(session):
 session = requests.Session()
 session.headers.update(user_agent)
 session = login(session)
-monitor_block(session)
+monitor_notebook(session)

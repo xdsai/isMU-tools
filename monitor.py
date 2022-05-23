@@ -1,4 +1,5 @@
 import requests, time, re, random, keyring, logging, json
+from tqdm import tqdm
 from bs4 import BeautifulSoup
 
 logging.basicConfig(level=logging.INFO)
@@ -42,7 +43,12 @@ def get_notes(session):
     return last_change, session
 
 def monitor_notebook(session):
-    last_change, session = get_notes(session)
+    while True:
+        try:
+            last_change, session = get_notes(session)
+            break
+        except:
+            pass
     logging.info("Started monitoring...")
     while True:
         try:
@@ -60,11 +66,13 @@ def monitor_notebook(session):
                 last_change = new_change
             sl_t = random.randint(min_sleep, max_sleep)
             logging.info(f'Sleeping for {sl_t} seconds.')
-            time.sleep(sl_t)
+            for i in tqdm(range(100)):
+                time.sleep(sl_t/100)
         except Exception as e:
             sl_t = random.randint(min_sleep, max_sleep)
             logging.error(f'Exception {e} occurred. Sleeping for {sl_t} seconds.')
-            time.sleep(sl_t)
+            for i in tqdm(range(100)):
+                time.sleep(sl_t/100)
 
 
 

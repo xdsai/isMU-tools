@@ -61,8 +61,10 @@ def monitor_notebook(session):
                 desc = row.find('pre').text
                 title = title[8:len(title)-7]
                 new_split = new_change.text.split(',')
+                logging.info(f"Detected a change... Title: {title} Description: {desc}")
                 embed = {'embeds':[{'title': new_split[3],'color':7988011,'fields':[{'name':f'**{title}**','value':desc}],'footer':{'text': f'{new_split[0][16:]}, {new_split[1]}'}}]}
                 requests.post(webhook,json = embed)
+                logging.info("Successfully posted to webhook")
                 last_change = new_change
             sl_t = random.randint(min_sleep, max_sleep)
             logging.info(f'Sleeping for {sl_t} seconds.')

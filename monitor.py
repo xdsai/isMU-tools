@@ -56,7 +56,7 @@ def monitor_notebook(session):
             if new_change.text != last_change.text:
                 change_req = session.get(block_link + new_change.text['href'])
                 soup = BeautifulSoup(change_req.text,'html.parser')
-                row = soup.find('div',{'id':str(re.sub('#','', new_change.text['href']))})
+                row = soup.find('div',{'id':str(re.sub('#','', new_change['href']))})
                 title = row.find('div',{'class':'column small-12 medium-3 tucne ipb-nazev'}).text
                 desc = row.find('pre').text
                 title = title[8:len(title)-7]

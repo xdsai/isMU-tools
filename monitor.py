@@ -51,7 +51,7 @@ def monitor_notebook(session):
             pass
     logging.info("Started monitoring...")
     while True:
-        try:
+        #try:
             new_change, session = get_notes(session)
             if new_change.text != last_change.text:
                 change_req = session.get(block_link + new_change['href'])
@@ -68,11 +68,12 @@ def monitor_notebook(session):
             logging.info(f'Sleeping for {sl_t} seconds.')
             for i in tqdm(range(100)):
                 time.sleep(sl_t/100)
-        except Exception as e:
-            sl_t = random.randint(min_sleep, max_sleep)
-            logging.error(f'Exception {e} occurred. Sleeping for {sl_t} seconds.')
-            for i in tqdm(range(100)):
-                time.sleep(sl_t/100)
+            """
+            except Exception as e:
+                sl_t = random.randint(min_sleep, max_sleep)
+                logging.error(f'Exception {e} occurred. Sleeping for {sl_t} seconds.')
+                for i in tqdm(range(100)):
+                    time.sleep(sl_t/100)"""
 
 
 

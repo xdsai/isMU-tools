@@ -19,8 +19,8 @@ with open('config.json', 'r') as cfg:
 isl = 'https://is.muni.cz/auth/'
 block_link = 'https://is.muni.cz/auth/student/poznamkove_bloky_nahled'
 
-min_sleep = 50 #time in seconds, make sure to not get rate limited
-max_sleep = 100
+min_sleep = 300 #time in seconds, make sure to not get rate limited
+max_sleep = 700
 
 
 def login(session):
@@ -51,30 +51,30 @@ def monitor_notebook(session):
             pass
     logging.info("Started monitoring...")
     while True:
-        #try:
-        new_change, session = get_notes(session)
-        if new_change.text != last_change.text:
-            change_req = session.get(block_link + new_change['href'])
-            soup = BeautifulSoup(change_req.text,'html.parser')
-            row = soup.find('div',{'id':str(re.sub('#','', new_change['href']))})
-            title = row.find('div',{'class':'column small-12 medium-3 tucne ipb-nazev'}).text
-            desc = row.find('pre').text
-            title = title[8:len(title)-7]
-            new_split = new_change.text.split(',')
-            logging.info(f"Detected a change... Title: {title} Description: {desc}")
-            embed = {'embeds':[{'title': new_split[3],'color':7988011,'fields':[{'name':f'**{title}**','value':desc}],'footer':{'text': f'{new_split[0][16:]}, {new_split[1]}'}}]}
-            requests.post(webhook,json = embed)
-            logging.info("Successfully posted to webhook")
-            last_change = new_change
-        sl_t = random.randint(min_sleep, max_sleep)
-        logging.info(f'Sleeping for {sl_t} seconds.')
-        for i in tqdm(range(100)):
-            time.sleep(sl_t/100)
-        """except Exception as e:
+        try:
+            new_change, session = get_notes(session)
+            if new_change.text != last_change.text:
+                change_req = session.get(block_link + new_change['href'])
+                soup = BeautifulSoup(change_req.text,'html.parser')
+                row = soup.find('div',{'id':str(re.sub('#','', new_change['href']))})
+                title = row.find('div',{'class':'column small-12 medium-3 tucne ipb-nazev'}).text
+                desc = row.find('pre').text
+                title = title[8:len(title)-7]
+                new_split = new_change.text.split(',')
+                logging.info(f"Detected a change... Title: {title} Description: {desc}")
+                embed = {'embeds':[{'title': new_split[3],'color':7988011,'fields':[{'name':f'**{title}**','value':desc}],'footer':{'text': f'{new_split[0][16:]}, {new_split[1]}'}}]}
+                requests.post(webhook,json = embed)
+                logging.info("Successfully posted to webhook")
+                last_change = new_change
+            sl_t = random.randint(min_sleep, max_sleep)
+            logging.info(f'Sleeping for {sl_t} seconds.')
+            for i in tqdm(range(100)):
+                time.sleep(sl_t/100)
+        except Exception as e:
             sl_t = random.randint(min_sleep, max_sleep)
             logging.error(f'Exception {e} occurred. Sleeping for {sl_t} seconds.')
             for i in tqdm(range(100)):
-                time.sleep(sl_t/100)"""
+                time.sleep(sl_t/100)
 
 
 

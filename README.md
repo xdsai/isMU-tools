@@ -13,7 +13,7 @@ This will also set your keyring values of UCO and your password to be able to lo
 
 
 ### Notes
-This is an alternative script you can run yourself on a home server or such, if you don't wish to have the changes forwarded to your email as is possible by is.muni.cz directly.
+This is an alternative script you can run yourself on a home server or such, if you don't wish to have the changes forwarded to your email as is possible by is.muni.cz directly. It is not made to monitor for large amounts of changes in a quick succession, unless you change the sleep values. However please don't put too much strain on their servers by pushing the sleep time as low as possible.
 
 
 ### Example embed

@@ -1,4 +1,4 @@
-# IS Monitor
+# is.muni.cz monitor
 
 This is a script for monitoring changes on the notebook page on is.muni.cz and sending any changes via an embed to a discord webhook. It utilizes the requests python library and scrapes in irregular intervals. Only the czech version of is.muni is currently supported and English is not in the works.
 

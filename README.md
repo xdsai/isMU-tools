@@ -16,5 +16,5 @@ This will also set your keyring values of UCO and your password to be able to lo
 This is an alternative script you can run yourself on a home server or such, if you don't wish to have the changes forwarded to your email as is possible by is.muni.cz directly.
 
 
-Example embed -
+### Example embed
 > ![image](https://user-images.githubusercontent.com/49403617/170205830-52dfdd8c-620f-484f-98c3-c7ce6dcb66fa.png)

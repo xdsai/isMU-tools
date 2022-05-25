@@ -19,8 +19,8 @@ with open('config.json', 'r') as cfg:
 isl = 'https://is.muni.cz/auth/'
 block_link = 'https://is.muni.cz/auth/student/poznamkove_bloky_nahled'
 
-min_sleep = 20 #time in seconds, make sure to not get rate limited
-max_sleep = 40
+min_sleep = 50 #time in seconds, make sure to not get rate limited
+max_sleep = 100
 
 
 def login(session):

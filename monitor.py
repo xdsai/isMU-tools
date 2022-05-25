@@ -19,8 +19,8 @@ with open('config.json', 'r') as cfg:
 isl = 'https://is.muni.cz/auth/'
 block_link = 'https://is.muni.cz/auth/student/poznamkove_bloky_nahled'
 
-min_sleep = 300 #time in seconds, make sure to not get rate limited
-max_sleep = 600
+min_sleep = 20 #time in seconds, make sure to not get rate limited
+max_sleep = 40
 
 
 def login(session):
@@ -54,7 +54,7 @@ def monitor_notebook(session):
         #try:
         new_change, session = get_notes(session)
         if new_change.text != last_change.text:
-            change_req = session.get(block_link + new_change.text['href'])
+            change_req = session.get(block_link + new_change['href'])
             soup = BeautifulSoup(change_req.text,'html.parser')
             row = soup.find('div',{'id':str(re.sub('#','', new_change['href']))})
             title = row.find('div',{'class':'column small-12 medium-3 tucne ipb-nazev'}).text

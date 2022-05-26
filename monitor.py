@@ -47,8 +47,11 @@ def monitor_notebook(session):
         try:
             last_change, session = get_notes(session)
             break
-        except:
-            pass
+        except Exception as e:
+            sl_t = random.randint(min_sleep, max_sleep)
+            logging.error(f'Exception {e} occurred while setting up. Sleeping for {sl_t} seconds.')
+            for i in tqdm(range(100)):
+                time.sleep(sl_t/100)
     logging.info("Started monitoring...")
     while True:
         try:

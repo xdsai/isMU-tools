@@ -1,4 +1,4 @@
-# is.muni.cz monitor
+# is.muni.cz tools
 
 This is a script for monitoring changes on the notebook page of is.muni.cz, and for signing up for exams. It utilizes the requests python library and scrapes in irregular intervals. Only the czech version of is.muni is currently supported and English is not in the works.
 

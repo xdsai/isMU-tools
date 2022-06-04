@@ -17,6 +17,7 @@ with open('config.json', 'r') as cfg:
         logging.info("Webhook retrieved")
 
 isl = 'https://is.muni.cz/auth/'
+exams_link = 'https://is.muni.cz/auth/student/prihl_na_zkousky'
 block_link = 'https://is.muni.cz/auth/student/poznamkove_bloky_nahled'
 
 min_sleep = 300 #time in seconds, make sure to not get rate limited
@@ -79,9 +80,98 @@ def monitor_notebook(session):
             for i in tqdm(range(100)):
                 time.sleep(sl_t/100)
 
+def exam_signup(session):
+    logging.info('Fetching subject list...')
+    exam_master = session.get(exams_link, timeout = 10)
+    soup = BeautifulSoup(exam_master.text, 'html.parser')
+    sub_dict = {}
+    print("\nAvailable subjects")
+    print("------------------")
+    for subject in soup.find('main',{'id':'app_content'}).find('ul').find_all('li'):
+        sub_code = subject.text.split(' ')[0]
+        sub_href = f"{exams_link}{subject.find('a')['href'][18:]}"
+        sub_dict[sub_code.lower()] = sub_href
+        print(sub_code)
+    while True:
+        chosen_sub = input('Please choose a subject code from the options above: ').lower()
+        if chosen_sub not in sub_dict:
+            logging.error('The chosen subject wasn\'t found in the options above, please try again.')
+        else:
+            break
+    logging.info('Fetching exam dates...')
+    exam_entries_req = session.get(sub_dict[chosen_sub], timeout = 10)
+    soup = BeautifulSoup(exam_entries_req.text,'html.parser')
+    notif = soup.find('div',{'class':'zdurazneni info'})
+    if notif:
+        notif_text = notif.find('p').text
+        if notif_text.endswith('není v budoucnosti vypsán již žádný termín, nebo máte předmět již úspěšně ukončen.'):
+            logging.info('The subject has no exam dates or you have already completed it.')
+            exit(0)
+    exam_entries = {}
+    count = 0
+    print("\nAvailable dates")
+    print("------------------")
+    for entry in soup.find_all('tr',{'valign':'top'}):
+        exam_status = entry.find_all('td')[0].text
+        exam_href = f"{exams_link}{entry.find_all('td')[2].find_all('font')[3].find('a')['href'][18:]}"
+        exam_date = entry.find_all('td')[2].find('b').text
+        capacity_status = entry.find_all('td')[2].text
+        max_cap = re.search(r'max. (\d+)', capacity_status)[1]
+        current_cap = re.search(r'přihlášeno (\d+)', capacity_status)[1]
+        exam_entries[str(count)] = {
+            'date': exam_date,
+            'status': exam_status,
+            'link': exam_href,
+            'max_capacity': max_cap,
+            'current_signedup': current_cap
+        }
+        print(f'{count}: {exam_date}, CAPACITY: {current_cap}/{max_cap}')
+        count += 1
+    while True:
+        chosen_date = input(f'Please choose a date from the options above [0-{count}]: ').lower()
+        if int(chosen_date) > count or int(chosen_date) < 0:
+            logging.error('Invalid choice, please try again.')
+        else:    
+            break
+    logging.info('Trying to sign up...')
+    exam_link = exam_entries[chosen_date]['link']
+    if 'burza' in exam_link:
+        logging.error("You are already signed up for this exam date")
+        exit(1)
+    while True:
+        signup_req = session.get(exam_link, timeout = 10)
+        soup = BeautifulSoup(signup_req.text, 'html.parser')
+        success_status = soup.find('div', {'class': 'zdurazneni potvrzeni'})
+        if success_status:
+            logging.info('Successfully signed up for the exam.')
+            break
+        notification_status = soup.find('div', {'class': 'zdurazneni upozorneni'})
+        if notification_status:
+            logging.error('You are already signed up for a different exam, please unsubscribe and try again.')
+            break
+        error_status = soup.find('div',{'class':'zdurazneni chyba'})
+        if error_status:
+            error_text = error_status.find('h3').text
+            if error_text == 'Na tento termín se nelze přihlásit. Kapacitní limit zkušebního termínu je již zaplněn.':
+                sl_t = random.randint(min_sleep, max_sleep)
+                logging.error(f'Exam capacity is full. Sleeping for {sl_t} seconds.')
+                for i in tqdm(range(100)):
+                    time.sleep(sl_t/100)
 
+print('1: Notebook monitoring')
+print('2: Exam signup')
+while True:
+    mode = int(input('Please enter your desired mode: '))
+    if mode < 1 or mode > 2:
+        logging.error('Invalid choice, try again.')
+    else:
+        break
 
 session = requests.Session()
 session.headers.update(user_agent)
 session = login(session)
-monitor_notebook(session)
+
+if mode == 1:
+    monitor_notebook(session)
+elif mode == 2:
+    exam_signup(session)

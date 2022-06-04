@@ -1,7 +1,7 @@
 echo "Welcome to the install script!"
-echo "Making sure all the dependencies are installed"
+echo "Making sure all the dependencies are installed..."
+sleep 1
 
-python3 -m ensurepip
 python3 -m pip install -r requirements.txt
 
 echo "Please enter your IS UCO to continue"

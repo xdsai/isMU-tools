@@ -6,7 +6,9 @@ This is a script for monitoring changes on the notebook page of is.muni.cz, and 
 
 Make sure you have pip before installing, then run the installation script with -
 
-> ./install.sh
+```
+./install.sh
+```
 
 This will install the required python libraries and set your keyring values of UČO and password so that you don't have to enter your credentials in plain text whenever you start the script.
 

@@ -7,7 +7,7 @@ python3 -m pip install -r requirements.txt
 echo "Please enter your IS UCO to continue"
 python3 -m keyring set is-mon uco
 
-echo "Please enter your IS password to continue"
+echo "Please enter your primary IS password to continue"
 python3 -m keyring set is-mon password
 
 echo "Install completed. On the first launch of the script, you will be prompted for a webhook"

@@ -14,7 +14,7 @@ This will install the required python libraries and set your keyring values of U
 
 ## Modes
 
-The script contains 2 modes for you to run, a notebook monitoring mode, that sends changes in the notebook section to your discord server, and an exam signup mode, in which your subjects are fetched and you can choose a date of an exam to sign up for. This is useful when a date has no more capacity, and you want to get a spot as soon as it becomes available. This script checks if a spot is empty every couple of minutes, then signs you up for the desired date. It will not work if you are already signed up for a different exam date in the same subject.
+The script contains 2 modes for you to run, a notebook monitoring mode, that sends changes in the notebook section to your discord server, and an exam signup mode, in which your subjects are fetched and you can choose a date of an exam to sign up for. This is useful when a date has no more capacity, and you want to get a spot as soon as it becomes available. This script checks if a spot is empty every couple of minutes, then signs you up for the desired date.
 
 ### Notes
 

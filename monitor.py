@@ -32,7 +32,7 @@ max_sleep = 700
 
 def login(session):             # login to is.muni.cz
     logging.info("Logging in...")
-    init = session.get(isl, allow_redirects=True, timeout=10)
+    init = session.get(isl, allow_redirects=True)
     user = keyring.get_password('is-mon', 'uco')                # retrieve credentials from the python keyring library
     password = keyring.get_password('is-mon', 'password')
     login_post = session.post(init.url, data={"akce":"login", "credential_0":user, "credential_1":password, "uloz":"uloz"}, allow_redirects=True, timeout = 10)
@@ -109,7 +109,7 @@ def exam_signup(session):
     
     # fetch available subjects
     logging.info('Fetching subject list...')
-    exam_master = session.get(exams_link, timeout = 10)
+    exam_master = session.get(exams_link)
     soup = BeautifulSoup(exam_master.text, 'html.parser')
     sub_dict = {}
 

@@ -30,18 +30,20 @@ max_sleep = 700
 
 
 
-def login(session):             # login to is.muni.cz
-    logging.info("Logging in...")
-    init = session.get(isl, allow_redirects=True)
-    user = keyring.get_password('is-mon', 'uco')                # retrieve credentials from the python keyring library
-    password = keyring.get_password('is-mon', 'password')
-    login_post = session.post(init.url, data={"akce":"login", "credential_0":user, "credential_1":password, "uloz":"uloz"}, allow_redirects=True, timeout = 10)
-    
-    if login_post.url == isl:
-        logging.info("Login successful")
-    else:
-        logging.error("Login failed, invalid credentials, reset your keyring")
-        exit(1)
+def login(session):
+    while True:             # login to is.muni.cz
+        logging.info("Logging in...")
+        init = session.get(isl, allow_redirects=True)
+        user = keyring.get_password('is-mon', 'uco')                # retrieve credentials from the python keyring library
+        password = keyring.get_password('is-mon', 'password')
+        login_post = session.post(init.url, data={"akce":"login", "credential_0":user, "credential_1":password, "uloz":"uloz"}, allow_redirects=True, timeout = 10)
+        
+        if login_post.url == isl:
+            logging.info("Login successful")
+            break
+        else:
+            logging.error("Login failed, invalid credentials, reset your keyring")
+            exit(1)
 
     return session
 

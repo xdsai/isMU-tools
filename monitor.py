@@ -115,21 +115,17 @@ def exam_signup(session):
 
     print("\nAvailable subjects")
     print("------------------")
-
+    i = 0
     for subject in soup.find('main',{'id':'app_content'}).find('ul').find_all('li'):
 
         # retrieve info about the subject
         sub_code = subject.text.split(' ')[0]
         sub_href = f"{exams_link}{subject.find('a')['href'][18:]}"
-        sub_dict[sub_code.lower()] = sub_href
-        print(sub_code)
+        sub_dict[i] = sub_href
+        print(f"{i}: {sub_code}")
+        i += 1
 
-    while True:
-        chosen_sub = input('Please choose a subject code from the options above: ').lower()
-        if chosen_sub not in sub_dict:
-            logging.error('The chosen subject wasn\'t found in the options above, please try again.')
-        else:
-            break
+    chosen_sub = int(input('Please choose a subject code from the options above (number): '))
     
     # after the subject is chosen, check for available exam dates
     logging.info('Fetching exam dates...')

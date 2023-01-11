@@ -116,7 +116,13 @@ def exam_signup(session):
     
     # fetch available subjects
     logging.info('Fetching subject list...')
-    exam_master = session.get(exams_link)
+    while True:
+        try:
+            exam_master = session.get(exams_link)
+            break
+        except Exception as e:
+            logging.error(f'Exception {e} occurred while setting up. Sleeping for 10 seconds.')
+            time.sleep(10)
     soup = BeautifulSoup(exam_master.text, 'html.parser')
     sub_dict = {}
 

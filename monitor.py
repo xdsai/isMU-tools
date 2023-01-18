@@ -166,7 +166,11 @@ def exam_signup(session):
         exam_href = f"{exams_link}{entry.find_all('td')[2].find_all('font')[3].find('a')['href'][18:]}"
         exam_date = entry.find_all('td')[2].find('b').text
         capacity_status = entry.find_all('td')[2].text
-        max_cap = re.search(r'max. (\d+)', capacity_status)[1]
+        max_cap = re.search(r'max. (\d+)', capacity_status)
+        if max_cap:
+            max_cap = max_cap[1]
+        else:
+            max_cap = ''
         current_cap = re.search(r'přihlášeno (\d+)', capacity_status)[1]
         exam_entries[str(count)] = {
             'date': exam_date,

@@ -25,8 +25,8 @@ isl = 'https://is.muni.cz/auth/'
 exams_link = 'https://is.muni.cz/auth/student/prihl_na_zkousky'
 block_link = 'https://is.muni.cz/auth/student/poznamkove_bloky_nahled'
 
-min_sleep = 300 # time in seconds, make sure to not get rate limited
-max_sleep = 700
+min_sleep = int(input("Minimum sleep time (ex. 300): ") # time in seconds, make sure to not get rate limited
+max_sleep = int(input("Maximum sleep time (ex. 700): ")
 
 
 

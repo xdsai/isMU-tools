@@ -19,6 +19,7 @@ The script contains 2 modes for you to run, a notebook monitoring mode, that sen
 ### Notes
 
 I recommend running this script 24/7 on a home server or similar, if you don't wish to have notebook changes forwarded to your email as is possible by is.muni.cz directly. It is not made to monitor for large amounts of changes in a quick succession, unless you change the sleep values. However please don't put too much strain on their servers by pushing the sleep time as low as possible, as you might find yourself rate limited or even banned.
+You can find their rate limit policies here: https://is.muni.cz/auth/system/antiscraping
 
 ### Example embed
 

@@ -41,7 +41,7 @@ def login(session, user, password):
         return session, 1
 
 while True:
-    user = input("Enter your IS MUNI username: ")
+    user = input("Enter your IS MUNI uco: ")
     password = input("Enter your IS MUNI password: ")
     session, return_code = login(session, user, password)
     if return_code == 0:

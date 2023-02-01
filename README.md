@@ -22,7 +22,7 @@ This script signs you up for seminar groups. IS is known for crashing during hig
 
 ### Notes
 
-You can find is.muni's rate limit policies here: https://is.muni.cz/auth/system/antiscraping, make sure not to get rate limited.
+You can find is.muni's rate limit policies here: https://is.muni.cz/auth/system/antiscraping, make sure to not get rate limited.
 
 ### Example discord notification
 

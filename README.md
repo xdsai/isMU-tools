@@ -1,8 +1,8 @@
 # is.muni.cz tools
 
-This is a script for monitoring changes on the notebook page of is.muni.cz, and for signing up for exams. It utilizes the requests python library and scrapes in irregular intervals. Only the czech version of is.muni is currently supported and English is not in the works.
+This set of scripts is used for monitoring the notebook section, signing up for exams that are full and signing up for seminar groups on is.muni.cz. 
 
-## Installation
+## Installation - not needed for group_signup.py
 
 Make sure you have pip before installing, then run the installation script with -
 
@@ -10,17 +10,20 @@ Make sure you have pip before installing, then run the installation script with 
 ./install.sh
 ```
 
-This will install the required python libraries and set your keyring values of UČO and password so that you don't have to enter your credentials in plain text whenever you start the script.
+This will install the required python libraries and set your keyring values of UČO and password so that you don't have to enter your credentials in plain text whenever you start the script. The seminar group signup doesn't support this feature, as it is a script that you run once a semester.
 
-## Modes
+## monitor.py modes
 
-The script contains 2 modes for you to run, a notebook monitoring mode, that sends changes in the notebook section to your discord server, and an exam signup mode, in which your subjects are fetched and you can choose a date of an exam to sign up for. This is useful when a date has no more capacity, and you want to get a spot as soon as it becomes available. This script checks if a spot is empty every couple of minutes, then signs you up for the desired date.
+The first mode is the notebook monitoring script, that sends any changes detected in the notebook section of is.muni.cz directly to your discord channel through a webhook. It can only see the semester you have chosen in the top right of is.muni.cz (eg.: jaro 2023), and only the Czech version is supported. The exam signup mode does what it says. Sometimes, there is an exam date that is full, but you want to sign up as soon as someone leaves. This mode is for that. The maximum amount of requests you can send for this mode are 4 a minute, so a max-min sleep timer of 16-16 is optimal. Note that it can only sign you up if you haven't yet signed up for a different date on the same subject.
+
+## group_signup.py
+
+This script signs you up for seminar groups. IS is known for crashing during high load times like these, and this signs you up quicker than you could. It first asks when the signup happens (usually at 17-00-00), then logs you in with your učo and password, and then asks for the links to the seminar groups that you want to sign up. Input these one by one, and start the script by choosing number 2 in the menu. This creates threads that are unpaused when the chosen time is met. These threads repeatedly send requests for the signup to these groups, until they're either full or you have been successfully signed up.
 
 ### Notes
 
-I recommend running this script 24/7 on a home server or similar, if you don't wish to have notebook changes forwarded to your email as is possible by is.muni.cz directly. It is not made to monitor for large amounts of changes in a quick succession, unless you change the sleep values. However please don't put too much strain on their servers by pushing the sleep time as low as possible, as you might find yourself rate limited or even banned.
-You can find their rate limit policies here: https://is.muni.cz/auth/system/antiscraping
+You can find is.muni's rate limit policies here: https://is.muni.cz/auth/system/antiscraping, make sure not to get rate limited.
 
-### Example embed
+### Example discord notification
 
 > ![image](https://user-images.githubusercontent.com/49403617/170205830-52dfdd8c-620f-484f-98c3-c7ce6dcb66fa.png)

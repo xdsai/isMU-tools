@@ -207,7 +207,7 @@ def exam_signup(session):
         if success_status:
             logging.info('Successfully signed up for the exam.')
             embed = {'embeds':[{'title': "Exam signup",'color':7988011,'fields':[{'name':f'**{exam_entries[chosen_date]["date"]}**','value':"Signed up!"}]}]}
-            requests.post('https://discord.com/api/webhooks/935322331428057118/1itWrRTRfSZwjrVdSkKc_3N5kbyqHgFLNLuAJqb9NGytsP68NehF93tgWC6CXWonF0ED', json = embed)
+            requests.post(webhook, json = embed)
             break
 
         # the user doesn't meet the requirements to sign up

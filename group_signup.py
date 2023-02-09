@@ -11,15 +11,6 @@ import datetime
 logging.basicConfig(level=logging.INFO)
 user_agent = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.71 Safari/537.36 Edg/94.0.992.38'}
 
-wait_until = input("Enter the time (HH-MM-SS-DD-MM-YYYY), when the signup happens: ")
-hour = int(wait_until.split('-')[0])
-minute = int(wait_until.split('-')[1])
-second = int(wait_until.split('-')[2])
-day = int(wait_until.split('-')[3])
-month = int(wait_until.split('-')[4])
-year = int(wait_until.split('-')[5])
-date_time = datetime.datetime(year, month, day, hour, minute, second)
-unix_timestamp = time.mktime(date_time.timetuple())
 
 session = requests.Session()
 session.headers.update(user_agent)
@@ -62,6 +53,15 @@ while True:
     elif choice == '2':
         choice2 = input("1. Signup at a given time\n2. Repeatedly try to signup for the chosen groups (full)\nChoice (1 or 2): ")
         if choice2 == '1':
+            wait_until = input("Enter the time (HH-MM-SS-DD-MM-YYYY), when the signup happens: ")
+            hour = int(wait_until.split('-')[0])
+            minute = int(wait_until.split('-')[1])
+            second = int(wait_until.split('-')[2])
+            day = int(wait_until.split('-')[3])
+            month = int(wait_until.split('-')[4])
+            year = int(wait_until.split('-')[5])
+            date_time = datetime.datetime(year, month, day, hour, minute, second)
+            unix_timestamp = time.mktime(date_time.timetuple())
             group_num = 1
             for grp in groups:
                 threading.Thread(target = group_signup, args=(grp,group_num,session,)).start()

@@ -58,7 +58,7 @@ def group_signup_repeat(group_link, group_num, session):
     while True:
         try:
             init = session.get(group_link, allow_redirects=True, timeout = 10)
-            time.sleep(1)
+            time.sleep(60)
             if init.status_code == 200:
                 if "Přihlášení nelze provést" not in init.text:
                     logging.info(f"GRP-{group_num}: Successfully signed up")
@@ -68,7 +68,7 @@ def group_signup_repeat(group_link, group_num, session):
                 logging.info(f"GRP-{group_num}: Retrying...")
         except Exception as e:
             logging.info(f"GRP-{group_num}: Unknown error, retrying...")
-            time.sleep(1)
+            time.sleep(60)
 
 while True:
     user = input("Enter your IS MUNI uco: ")

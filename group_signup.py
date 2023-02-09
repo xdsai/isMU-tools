@@ -52,13 +52,13 @@ def group_signup(group_link, group_num, session):
         except Exception as e:
             logging.info(f"GRP-{group_num}: Unknown error, retrying...")
 
-def group_signup_repeat(group_link, group_num, session):
+def group_signup_repeat(group_link, group_num, session, sleep_time):
     logging.info(f"GRP-{group_num}: Starting signup")
     logging.info(f"GRP-{group_num}: Group link - {group_link}")
     while True:
         try:
             init = session.get(group_link, allow_redirects=True, timeout = 10)
-            time.sleep(60)
+            time.sleep(sleep_time)
             if init.status_code == 200:
                 if "Přihlášení nelze provést" not in init.text:
                     logging.info(f"GRP-{group_num}: Successfully signed up")
@@ -68,7 +68,7 @@ def group_signup_repeat(group_link, group_num, session):
                 logging.info(f"GRP-{group_num}: Retrying...")
         except Exception as e:
             logging.info(f"GRP-{group_num}: Unknown error, retrying...")
-            time.sleep(60)
+            time.sleep(sleep_time)
 
 while True:
     user = input("Enter your IS MUNI uco: ")
@@ -108,9 +108,10 @@ while True:
                 group_num += 1
             break
         elif choice == '2':
+            sleep_time = int(input("Enter your sleep time (in seconds, recommended (60 / (4 - number of groups)): ") or "60")
             group_num = 1
             for grp in groups:
-                threading.Thread(target = group_signup_repeat, args=(grp,group_num,session,)).start()
+                threading.Thread(target = group_signup_repeat, args=(grp,group_num,session,sleep_time,)).start()
                 time.sleep(1)
                 group_num += 1
             break

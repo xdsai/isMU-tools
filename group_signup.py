@@ -54,13 +54,27 @@ while True:
 groups = []
 
 while True:
-    choice = input("1. Enter a new group link\n2. Exit group adding and run the script\nChoice (1 or 2): ")
+    choice = input("1. Enter a new group link\n2. Exit group adding and choose a mode\nChoice (1 or 2): ")
     if choice == '1':
         group_link = input("Please enter the group link: ")
         groups.append(group_link)
         logging.info("Group successfully added")
     elif choice == '2':
-        break
+        choice2 = input("1. Signup at a given time\n2. Repeatedly try to signup for the chosen groups (full)\nChoice (1 or 2): ")
+        if choice2 == '1':
+            group_num = 1
+            for grp in groups:
+                threading.Thread(target = group_signup, args=(grp,group_num,session,)).start()
+                time.sleep(1)
+                group_num += 1
+            break
+        elif choice == '2':
+            group_num = 1
+            for grp in groups:
+                threading.Thread(target = group_signup_repeat, args=(grp,group_num,session,)).start()
+                time.sleep(1)
+                group_num += 1
+            break
     else:
         logging.info("Invalid choice")
 
@@ -86,9 +100,19 @@ def group_signup(group_link, group_num, session):
         except Exception as e:
             logging.info(f"GRP-{group_num}: Unknown error, retrying...")
 
-
-group_num = 1
-for grp in groups:
-    threading.Thread(target = group_signup, args=(grp,group_num,session,)).start()
-    time.sleep(1)
-    group_num += 1
+def group_signup_repeat(group_link, group_num, session):
+    logging.info(f"GRP-{group_num}: Starting signup")
+    logging.info(f"GRP-{group_num}: Group link - {group_link}")
+    while True:
+        try:
+            init = session.get(group_link, allow_redirects=True, timeout = 10)
+            if init.status_code == 200:
+                if "Přihlášení nelze provést" not in init.text:
+                    logging.info(f"GRP-{group_num}: Successfully signed up")
+                    break
+            else:
+                logging.info(f"GRP-{group_num}: Non-200 status code - {init.status_code}")
+                logging.info(f"GRP-{group_num}: Retrying...")
+            time.sleep(1)
+        except Exception as e:
+            logging.info(f"GRP-{group_num}: Unknown error, retrying...")

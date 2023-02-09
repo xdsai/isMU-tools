@@ -31,6 +31,44 @@ def login(session, user, password):
     else:
         return session, 1
 
+def group_signup(group_link, group_num, session):
+    logging.info(f"GRP-{group_num}: Starting signup")
+    logging.info(f"GRP-{group_num}: Group link - {group_link}")
+    pause.until(unix_timestamp)
+    while True:
+        try:
+            init = session.get(group_link, allow_redirects=True, timeout = 10)
+            if init.status_code == 200:
+                if "Přihlášení nelze provést" in init.text:
+                    logging.info(f"GRP-{group_num}: Group is already full")
+                else:
+                    logging.info(f"GRP-{group_num}: Successfully signed up")
+                break
+
+        except TimeoutError as e:
+            logging.info(f"GRP-{group_num}: Timed out, retrying...")
+        except ConnectionError as e:
+            logging.info(f"GRP-{group_num}: Connection error, retrying...")
+        except Exception as e:
+            logging.info(f"GRP-{group_num}: Unknown error, retrying...")
+
+def group_signup_repeat(group_link, group_num, session):
+    logging.info(f"GRP-{group_num}: Starting signup")
+    logging.info(f"GRP-{group_num}: Group link - {group_link}")
+    while True:
+        try:
+            init = session.get(group_link, allow_redirects=True, timeout = 10)
+            if init.status_code == 200:
+                if "Přihlášení nelze provést" not in init.text:
+                    logging.info(f"GRP-{group_num}: Successfully signed up")
+                    break
+            else:
+                logging.info(f"GRP-{group_num}: Non-200 status code - {init.status_code}")
+                logging.info(f"GRP-{group_num}: Retrying...")
+            time.sleep(1)
+        except Exception as e:
+            logging.info(f"GRP-{group_num}: Unknown error, retrying...")
+
 while True:
     user = input("Enter your IS MUNI uco: ")
     password = input("Enter your IS MUNI password: ")
@@ -77,42 +115,3 @@ while True:
             break
     else:
         logging.info("Invalid choice")
-
-
-def group_signup(group_link, group_num, session):
-    logging.info(f"GRP-{group_num}: Starting signup")
-    logging.info(f"GRP-{group_num}: Group link - {group_link}")
-    pause.until(unix_timestamp)
-    while True:
-        try:
-            init = session.get(group_link, allow_redirects=True, timeout = 10)
-            if init.status_code == 200:
-                if "Přihlášení nelze provést" in init.text:
-                    logging.info(f"GRP-{group_num}: Group is already full")
-                else:
-                    logging.info(f"GRP-{group_num}: Successfully signed up")
-                break
-
-        except TimeoutError as e:
-            logging.info(f"GRP-{group_num}: Timed out, retrying...")
-        except ConnectionError as e:
-            logging.info(f"GRP-{group_num}: Connection error, retrying...")
-        except Exception as e:
-            logging.info(f"GRP-{group_num}: Unknown error, retrying...")
-
-def group_signup_repeat(group_link, group_num, session):
-    logging.info(f"GRP-{group_num}: Starting signup")
-    logging.info(f"GRP-{group_num}: Group link - {group_link}")
-    while True:
-        try:
-            init = session.get(group_link, allow_redirects=True, timeout = 10)
-            if init.status_code == 200:
-                if "Přihlášení nelze provést" not in init.text:
-                    logging.info(f"GRP-{group_num}: Successfully signed up")
-                    break
-            else:
-                logging.info(f"GRP-{group_num}: Non-200 status code - {init.status_code}")
-                logging.info(f"GRP-{group_num}: Retrying...")
-            time.sleep(1)
-        except Exception as e:
-            logging.info(f"GRP-{group_num}: Unknown error, retrying...")
